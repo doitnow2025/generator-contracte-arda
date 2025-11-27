@@ -1,0 +1,12 @@
+{
+  "name": "generator-contracte-arda",
+  "version": "1.0.0",
+  "description": "Generator automat de contracte pentru ARDA Manufacturing",
+  "scripts": {
+    "dev": "npx serve public",
+    "build": "echo 'Static site - no build needed'"
+  },
+  "keywords": ["contracte", "generator", "arda"],
+  "author": "ARDA Manufacturing",
+  "license": "MIT"
+}

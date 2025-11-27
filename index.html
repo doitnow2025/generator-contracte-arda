@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Contracte - ARDA Manufacturing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .template-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .template-item:hover {
+            background: #e9ecef;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .template-item.active {
+            background: #667eea;
+            color: white;
+            border-left-color: #764ba2;
+        }
+
+        .template-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .template-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .section-title {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 30px 0 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            border-left: 5px solid #667eea;
+        }
+
+        .rate-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e1e4e8;
+        }
+
+        .preview-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px dashed #667eea;
+            display: none;
+        }
+
+        .preview-box.show {
+            display: block;
+        }
+
+        .preview-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 5px solid #ffc107;
+        }
+
+        .accesorii-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .accesoriu-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .btn-remove {
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-remove:hover {
+            background: #c82333;
+        }
+
+        .btn-add {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-add:hover {
+            background: #218838;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Generator Contracte</h1>
+            <p>ARDA Manufacturing SRL - Sistem de generare automată contracte</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Sidebar cu șabloane -->
+            <div class="sidebar">
+                <h2>📋 Șabloane disponibile</h2>
+                <div class="template-item active" onclick="selectTemplate('contract')">
+                    <div class="template-name">Contract Vânzare Rate</div>
+                    <div class="template-desc">Contract standard cu plată în rate</div>
+                </div>
+                <div class="template-item" onclick="selectTemplate('pv')">
+                    <div class="template-name">Proces Verbal Recepție</div>
+                    <div class="template-desc">PV pentru primirea echipamentului</div>
+                </div>
+                <div class="template-item" onclick="selectTemplate('garantie')">
+                    <div class="template-name">Certificat Garanție</div>
+                    <div class="template-desc">Certificat de garanție echipament</div>
+                </div>
+                <div class="template-item" onclick="selectTemplate('anexa')">
+                    <div class="template-name">Anexa Echipament</div>
+                    <div class="template-desc">Lista echipament și accesorii</div>
+                </div>
+            </div>
+
+            <!-- Formular principal -->
+            <div class="form-section">
+                <div id="alert" class="alert"></div>
+
+                <h2 id="form-title">Contract de Vânzare cu Plată în Rate</h2>
+
+                <form id="contractForm">
+                    <!-- DATE GENERALE -->
+                    <div class="section-title">📅 Date Generale</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Număr Contract *</label>
+                            <input type="text" id="numar_contract" placeholder="ex: 0001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Data Contract *</label>
+                            <input type="date" id="data_contract" required>
+                        </div>
+                    </div>
+
+                    <!-- DATE CUMPĂRĂTOR -->
+                    <div class="section-title">👤 Date Cumpărător</div>
+                    <div class="form-group">
+                        <label>Tip Cumpărător *</label>
+                        <select id="tip_cumparator" onchange="toggleCumparatorFields()">
+                            <option value="pfa">Persoană Fizică Autorizată (PFA)</option>
+                            <option value="srl">Societate (SRL/SA)</option>
+                            <option value="pf">Persoană Fizică</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nume Complet / Denumire *</label>
+                        <input type="text" id="nume_cumparator" placeholder="ex: Dan Elena-Madalina" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CUI / CIF *</label>
+                            <input type="text" id="cui_cumparator" placeholder="ex: 45307839" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nr. Registrul Comerțului *</label>
+                            <input type="text" id="rc_cumparator" placeholder="ex: F40/3217/2021" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Adresă Completă *</label>
+                        <textarea id="adresa_cumparator" placeholder="ex: București, Sector 3, Bld. 1 Decembrie 1918, nr. 45, Parter" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CNP Reprezentant *</label>
+                            <input type="text" id="cnp_cumparator" placeholder="ex: 2830104032982" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cont Bancar</label>
+                            <input type="text" id="cont_cumparator" placeholder="ROXX...">
+                        </div>
+                    </div>
+
+                    <!-- DATE FIDEJUSOR -->
+                    <div class="section-title">🛡️ Date Fidejusor</div>
+                    <div class="form-group">
+                        <label>Nume Complet Fidejusor *</label>
+                        <input type="text" id="nume_fidejusor" placeholder="ex: Dan Elena-Madalina" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Adresă Domiciliu Fidejusor *</label>
+                        <textarea id="adresa_fidejusor" placeholder="ex: București, Sector 3, Bld. 1 Decembrie 1918, nr. 45" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Serie CI *</label>
+                            <input type="text" id="ci_serie_fidejusor" placeholder="ex: RZ" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Număr CI *</label>
+                            <input type="text" id="ci_nr_fidejusor" placeholder="ex: 002633" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>CNP Fidejusor *</label>
+                        <input type="text" id="cnp_fidejusor" placeholder="ex: 2830104032982" required>
+                    </div>
+
+                    <!-- DATE ECHIPAMENT -->
+                    <div class="section-title">🔧 Date Echipament</div>
+                    <div class="form-group">
+                        <label>Tip Echipament *</label>
+                        <select id="tip_echipament" onchange="loadEchipamentTemplate()">
+                            <option value="">Selectează echipament...</option>
+                            <option value="satinee">Satinee - Epilare laser</option>
+                            <option value="eraser">Eraser - Îndepărtare tatuaje</option>
+                            <option value="primefrax">PrimeFrax - Laser CO2 fracționat</option>
+                            <option value="custom">Echipament personalizat...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Denumire Echipament *</label>
+                        <input type="text" id="nume_echipament" placeholder="ex: Satinee - Epilare laser" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Serie Echipament</label>
+                        <input type="text" id="serie_echipament" placeholder="Se completează la livrare">
+                    </div>
+
+                    <!-- ACCESORII -->
+                    <div class="form-group">
+                        <label>Accesorii incluse</label>
+                        <div class="accesorii-list" id="accesoriiList">
+                            <!-- Accesoriile vor fi generate dinamic -->
+                        </div>
+                        <button type="button" class="btn-add" onclick="addAccesoriu()">+ Adaugă accesoriu</button>
+                    </div>
+
+                    <!-- DATE FINANCIARE -->
+                    <div class="section-title">💰 Date Financiare</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Preț Total (LEI) *</label>
+                            <input type="number" id="pret_total" placeholder="ex: 60000" required onchange="calculeazaRate()">
+                        </div>
+                        <div class="form-group">
+                            <label>Avans (LEI) *</label>
+                            <input type="number" id="avans" placeholder="ex: 19800" required onchange="calculeazaRate()">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Număr Rate *</label>
+                            <input type="number" id="nr_rate" placeholder="ex: 20" required onchange="calculeazaRate()">
+                        </div>
+                        <div class="form-group">
+                            <label>Ziua Scadenței (1-28) *</label>
+                            <input type="number" id="zi_scadenta" min="1" max="28" value="27" required>
+                        </div>
+                    </div>
+
+                    <div class="rate-group">
+                        <strong>Sumă de plată în rate:</strong> <span id="suma_rate">0</span> LEI<br>
+                        <strong>Valoare rată lunară:</strong> <span id="valoare_rata">0</span> LEI
+                    </div>
+
+                    <!-- GARANȚIE -->
+                    <div class="section-title">⚙️ Garanție</div>
+                    <div class="form-group">
+                        <label>Perioada Garanție (luni) *</label>
+                        <input type="number" id="perioada_garantie" placeholder="ex: 12" required>
+                    </div>
+
+                    <!-- ACȚIUNI -->
+                    <div class="actions">
+                        <button type="button" class="btn btn-primary" onclick="generateContract()">
+                            📄 Generează Contract
+                        </button>
+                        <button type="button" class="btn btn-success" onclick="generateAll()">
+                            📦 Generează Toate Documentele
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            🔄 Resetează
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Preview -->
+                <div id="previewBox" class="preview-box">
+                    <h3>👁️ Previzualizare</h3>
+                    <div id="previewContent" class="preview-content"></div>
+                    <button type="button" class="btn btn-success" onclick="downloadContract()" style="margin-top: 15px">
+                        💾 Descarcă Document
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Setare data curentă
+        document.getElementById('data_contract').valueAsDate = new Date();
+
+        let currentTemplate = 'contract';
+        let generatedDocument = '';
+        let currentFilename = '';
+
+        // Template-uri accesorii predefinite
+        const accesoriiTemplates = {
+            'satinee': [
+                { nume: 'Ochelari protecție terapeut', cantitate: 1 },
+                { nume: 'Ochelari protecție client', cantitate: 1 },
+                { nume: 'Furtun apă', cantitate: 2 },
+                { nume: 'Pâlnie apă', cantitate: 1 },
+                { nume: 'Chei', cantitate: 2 },
+                { nume: 'Siguranță aparat', cantitate: 1 },
+                { nume: 'Capete de tratament', cantitate: 5 },
+                { nume: 'Cablu alimentare', cantitate: 1 },
+                { nume: 'Pedală', cantitate: 1 }
+            ],
+            'eraser': [
+                { nume: 'Cablu de alimentare', cantitate: 1 },
+                { nume: 'Manipul', cantitate: 1 },
+                { nume: 'Chei', cantitate: 2 },
+                { nume: 'Capete de lucru', cantitate: 4 },
+                { nume: 'Furtun', cantitate: 1 },
+                { nume: 'Pâlnie alimentare', cantitate: 1 },
+                { nume: 'Pedală', cantitate: 1 },
+                { nume: 'Ochelari terapeut', cantitate: 1 },
+                { nume: 'Ochelari client', cantitate: 1 }
+            ]
+        };
+
+        function selectTemplate(template) {
+            currentTemplate = template;
+            
+            // Update UI
+            document.querySelectorAll('.template-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.template-item').classList.add('active');
+
+            // Update form title
+            const titles = {
+                'contract': 'Contract de Vânzare cu Plată în Rate',
+                'pv': 'Proces Verbal de Recepție',
+                'garantie': 'Certificat de Garanție',
+                'anexa': 'Anexa - Specificații Echipament'
+            };
+            document.getElementById('form-title').textContent = titles[template];
+        }
+
+        function toggleCumparatorFields() {
+            const tip = document.getElementById('tip_cumparator').value;
+            // În funcție de tip, poți ascunde/arăta anumite câmpuri
+        }
+
+        function loadEchipamentTemplate() {
+            const tip = document.getElementById('tip_echipament').value;
+            
+            if (tip === 'satinee') {
+                document.getElementById('nume_echipament').value = 'Satinee - Epilare laser';
+                loadAccesorii('satinee');
+            } else if (tip === 'eraser') {
+                document.getElementById('nume_echipament').value = 'Eraser - Îndepărtare tatuaje';
+                loadAccesorii('eraser');
+            } else if (tip === 'primefrax') {
+                document.getElementById('nume_echipament').value = 'PrimeFrax - Laser CO2 fracționat';
+                loadAccesorii('custom');
+            } else {
+                document.getElementById('nume_echipament').value = '';
+                loadAccesorii('custom');
+            }
+        }
+
+        function loadAccesorii(template) {
+            const list = document.getElementById('accesoriiList');
+            list.innerHTML = '';
+
+            const accesorii = accesoriiTemplates[template] || [];
+            
+            if (accesorii.length > 0) {
+                accesorii.forEach((acc, index) => {
+                    addAccesoriuWithData(acc.nume, acc.cantitate);
+                });
+            } else {
+                addAccesoriu();
+            }
+        }
+
+        function addAccesoriu() {
+            addAccesoriuWithData('', 1);
+        }
+
+        function addAccesoriuWithData(nume, cantitate) {
+            const list = document.getElementById('accesoriiList');
+            const index = list.children.length;
+            
+            const item = document.createElement('div');
+            item.className = 'accesoriu-item';
+            item.innerHTML = `
+                <input type="text" placeholder="Denumire accesoriu" value="${nume}" class="acc-nume">
+                <input type="number" placeholder="Cant." value="${cantitate}" min="1" class="acc-cant">
+                <button type="button" class="btn-remove" onclick="removeAccesoriu(this)">✕</button>
+            `;
+            list.appendChild(item);
+        }
+
+        function removeAccesoriu(btn) {
+            btn.closest('.accesoriu-item').remove();
+        }
+
+        function calculeazaRate() {
+            const pretTotal = parseFloat(document.getElementById('pret_total').value) || 0;
+            const avans = parseFloat(document.getElementById('avans').value) || 0;
+            const nrRate = parseInt(document.getElementById('nr_rate').value) || 1;
+
+            const sumaRate = pretTotal - avans;
+            const valorataRata = Math.round(sumaRate / nrRate);
+
+            document.getElementById('suma_rate').textContent = sumaRate.toLocaleString('ro-RO');
+            document.getElementById('valoare_rata').textContent = valorataRata.toLocaleString('ro-RO');
+        }
+
+        function getFormData() {
+            const accesorii = [];
+            document.querySelectorAll('.accesoriu-item').forEach(item => {
+                const nume = item.querySelector('.acc-nume').value;
+                const cant = item.querySelector('.acc-cant').value;
+                if (nume) {
+                    accesorii.push({ nume, cantitate: cant });
+                }
+            });
+
+            return {
+                numar_contract: document.getElementById('numar_contract').value,
+                data_contract: document.getElementById('data_contract').value,
+                nume_cumparator: document.getElementById('nume_cumparator').value,
+                cui_cumparator: document.getElementById('cui_cumparator').value,
+                rc_cumparator: document.getElementById('rc_cumparator').value,
+                cnp_cumparator: document.getElementById('cnp_cumparator').value,
+                adresa_cumparator: document.getElementById('adresa_cumparator').value,
+                cont_cumparator: document.getElementById('cont_cumparator').value,
+                nume_fidejusor: document.getElementById('nume_fidejusor').value,
+                adresa_fidejusor: document.getElementById('adresa_fidejusor').value,
+                ci_serie_fidejusor: document.getElementById('ci_serie_fidejusor').value,
+                ci_nr_fidejusor: document.getElementById('ci_nr_fidejusor').value,
+                cnp_fidejusor: document.getElementById('cnp_fidejusor').value,
+                nume_echipament: document.getElementById('nume_echipament').value,
+                serie_echipament: document.getElementById('serie_echipament').value,
+                pret_total: document.getElementById('pret_total').value,
+                avans: document.getElementById('avans').value,
+                nr_rate: document.getElementById('nr_rate').value,
+                zi_scadenta: document.getElementById('zi_scadenta').value,
+                perioada_garantie: document.getElementById('perioada_garantie').value,
+                accesorii: accesorii
+            };
+        }
+
+        function generateContract() {
+            const data = getFormData();
+            
+            // Validare
+            if (!data.numar_contract || !data.data_contract || !data.nume_cumparator) {
+                showAlert('Completează toate câmpurile obligatorii!', 'warning');
+                return;
+            }
+
+            // Calculează ratele
+            const pretTotal = parseFloat(data.pret_total);
+            const avans = parseFloat(data.avans);
+            const nrRate = parseInt(data.nr_rate);
+            const sumaRate = pretTotal - avans;
+            const valorataRata = Math.round(sumaRate / nrRate);
+
+            // Generează datele ratelor
+            const dataStart = new Date(data.data_contract);
+            const rate = [];
+            for (let i = 1; i <= nrRate; i++) {
+                const dataRata = new Date(dataStart);
+                dataRata.setMonth(dataStart.getMonth() + i);
+                dataRata.setDate(parseInt(data.zi_scadenta));
+                rate.push({
+                    nr: i,
+                    valoare: valorataRata,
+                    data: formatDate(dataRata)
+                });
+            }
+
+            let contract = '';
+
+            if (currentTemplate === 'contract') {
+                contract = generateContractText(data, rate, valorataRata);
+                currentFilename = `Contract_${data.nume_cumparator.replace(/\s+/g, '_')}_${data.numar_contract}.txt`;
+            } else if (currentTemplate === 'pv') {
+                contract = generatePVText(data);
+                currentFilename = `PV_Receptie_${data.nume_cumparator.replace(/\s+/g, '_')}.txt`;
+            } else if (currentTemplate === 'garantie') {
+                contract = generateGarantieText(data);
+                currentFilename = `Certificat_Garantie_${data.nume_cumparator.replace(/\s+/g, '_')}.txt`;
+            } else if (currentTemplate === 'anexa') {
+                contract = generateAnexaText(data);
+                currentFilename = `Anexa_1_${data.nume_echipament.replace(/\s+/g, '_')}.txt`;
+            }
+
+            generatedDocument = contract;
+            document.getElementById('previewContent').textContent = contract;
+            document.getElementById('previewBox').classList.add('show');
+            
+            showAlert('Document generat cu succes!', 'success');
+        }
+
+        function generateContractText(data, rate, valorataRata) {
+            const dataFormatted = formatDate(new Date(data.data_contract));
+            
+            let rateText = '';
+            rate.forEach(r => {
+                rateText += `RATA ${r.nr}: ${r.valoare.toLocaleString('ro-RO')} LEI, scadență ${r.data}\n`;
+            });
+
+            return `CONTRACT DE VÂNZARE CU PLATĂ ÎN RATE
+NR. ${data.numar_contract} / ${dataFormatted}
+
+ÎNTRE:
+
+VÂNZĂTOR:
+ARDA MANUFACTURING SRL
+CUI: 33309968, J40/7470/2014
+Sediu: București, Str. Poet Panait Cernea nr. 1, BL M52, sc. 2, et. 4, ap. 47
+Punct de lucru: Str. Foisorului nr. 107, sector 3, București
+Cont: RO28BTRLRONCRT0258793601 - Banca Transilvania
+Reprezentant legal: Ionuț Dinu
+
+ȘI
+
+CUMPĂRĂTOR:
+${data.nume_cumparator.toUpperCase()}
+CIF: ${data.cui_cumparator}
+Nr. Registrul Comerțului: ${data.rc_cumparator}
+CNP: ${data.cnp_cumparator}
+Adresă: ${data.adresa_cumparator}
+Cont bancar: ${data.cont_cumparator || '_________________________________'}
+Reprezentant legal: ${data.nume_cumparator}
+
+ȘI
+
+FIDEJUSOR:
+Nume: ${data.nume_fidejusor}
+Domiciliu: ${data.adresa_fidejusor}
+CI seria ${data.ci_serie_fidejusor} nr. ${data.ci_nr_fidejusor}, CNP: ${data.cnp_fidejusor}
+
+
+ARTICOLUL 1 - OBIECTUL CONTRACTULUI
+
+1.1. Vânzătorul vinde, iar Cumpărătorul cumpără cu plata în rate echipamentul și accesoriile specificate în ANEXA 1 la prezentul contract, după cum urmează:
+
+${data.nume_echipament}
+Serie: ${data.serie_echipament || '_________________________________'}
+Preț total: ${parseFloat(data.pret_total).toLocaleString('ro-RO')} LEI
+
+1.2. Echipamentul include toate accesoriile, componentele și documentația tehnică menționate în Anexa 1, care face parte integrantă din prezentul contract.
+
+1.3. IMPORTANT: Echipamentul împreună cu toate accesoriile sale rămân proprietatea Vânzătorului până la achitarea integrală a tuturor ratelor. Transferul de proprietate se realizează doar la plata ultimei rate.
+
+
+ARTICOLUL 2 - PREȚUL ȘI MODALITATEA DE PLATĂ
+
+2.1. Prețul total al echipamentului este de ${parseFloat(data.pret_total).toLocaleString('ro-RO')} LEI, plătibil după cum urmează:
+
+AVANS: ${parseFloat(data.avans).toLocaleString('ro-RO')} LEI - achitat la data semnării contractului
+
+Sold de plată: ${(parseFloat(data.pret_total) - parseFloat(data.avans)).toLocaleString('ro-RO')} LEI, plătibil în ${data.nr_rate} rate lunare egale a ${valorataRata.toLocaleString('ro-RO')} LEI fiecare, după cum urmează:
+
+${rateText}
+2.2. Plata se efectuează în LEI exclusiv prin transfer bancar.
+
+2.3. Ratele sunt garantate cu bilete la ordin sau file CEC. Garanțiile se returnează după achitarea fiecărei rate.
+
+2.4. În caz de întârziere la plată peste 15 zile de la scadență, biletele la ordin/CEC vor fi introduse la plată, iar Cumpărătorul va datora penalități de 0,1% pe zi.
+
+
+ARTICOLUL 3 - LIVRARE ȘI MONTAJ
+
+3.1. Echipamentul împreună cu toate accesoriile specificate în Anexa 1 se livrează în 10 zile lucrătoare de la semnarea contractului la adresa Cumpărătorului, pe baza procesului-verbal de recepție.
+
+3.2. La predare, Cumpărătorul va verifica și semna Anexa 1, confirmând primirea echipamentului complet cu toate accesoriile enumerate.
+
+3.3. Montajul și trainingul (3 ore) se realizează exclusiv de către Vânzător la sediul Vânzătorului, pe bază de programare.
+
+
+ARTICOLUL 4 - GARANȚIE
+
+4.1. Echipamentul beneficiază de garanție conform certificatului de garanție anexat la contract.
+
+4.2. Garanția acoperă defectele de fabricație și viciile ascunse, dar NU acoperă:
+- Deteriorări cauzate de manipulare necorespunzătoare
+- Defecte cauzate de montare sau folosire neconformă
+- Deteriorări prin accident, neglijență sau nerespectarea instrucțiunilor
+- Accesorii, consumabile sau piese casabile
+- Defecțiuni cauzate de variații de tensiune electrică
+
+4.3. Garanția este valabilă doar cu prezentarea facturii originale și a certificatului de garanție.
+
+
+ARTICOLUL 5 - RESTRICȚII ȘI OBLIGAȚII ALE CUMPĂRĂTORULUI
+
+Până la achitarea integrală a tuturor ratelor, Cumpărătorul NU are dreptul să:
+
+5.1. Înstrăineze, închirieze, dea în comodat sau să constituie garanții asupra echipamentului
+5.2. Efectueze reparații sau desfaceri ale echipamentului (doar personal autorizat al Vânzătorului)
+5.3. Mute echipamentul în altă locație fără acordul scris al Vânzătorului
+5.4. Cedeze prezentul contract sau orice drepturi/obligații din acesta fără acordul Vânzătorului
+
+5.5. Nerespectarea acestor restricții atrage:
+- Pierderea garanției echipamentului
+- Obligația de plată a unei despăgubiri de 20% din valoarea contractului
+- Dreptul Vânzătorului de a ridica echipamentul
+
+
+ARTICOLUL 6 - DREPTUL VÂNZĂTORULUI DE A RIDICA ECHIPAMENTUL
+
+6.1. Având în vedere că echipamentul este proprietatea Vânzătorului până la plata integrală, Vânzătorul are dreptul să ridice echipamentul în următoarele situații:
+
+a) Întârziere la plata oricărei rate cu peste 10 zile de la scadență
+b) Încălcarea restricțiilor prevăzute la art. 5
+c) Deschiderea procedurii de insolvență/reorganizare judiciară împotriva Cumpărătorului
+
+6.2. În caz de ridicare a echipamentului din culpa Cumpărătorului:
+- Sumele plătite până în acel moment NU se returnează (reprezintă contravaloarea folosirii echipamentului)
+- Cumpărătorul datorează o despăgubire suplimentară de 20% din valoarea contractului
+- Dacă echipamentul este deteriorat, costul reparației/înlocuirii este suportat integral de Cumpărător și Fidejusor
+
+
+ARTICOLUL 7 - FIDEJUSIUNEA
+
+7.1. Fidejusorul garantează în solidar cu Cumpărătorul îndeplinirea tuturor obligațiilor de plată și despăgubire din prezentul contract.
+
+7.2. Fidejusorul renunță la beneficiul de discuțiune și de diviziune, Vânzătorul putând urmări direct Fidejusorul pentru executarea oricăror obligații.
+
+7.3. Fidejusiunea încetează odată cu achitarea integrală a tuturor obligațiilor de către Cumpărător sau prin achitarea directă a acestora de către Fidejusor.
+
+
+ARTICOLUL 8 - REZILIEREA CONTRACTULUI
+
+8.1. Contractul poate fi reziliat de plin drept de către Vânzător, fără somație prealabilă, în următoarele cazuri:
+- Neachitarea oricărei rate după 10 zile de la scadență
+- Încălcarea restricțiilor de la art. 5
+
+8.2. Rezilierea se consideră operată prin trimiterea unei notificări scrise către Cumpărător.
+
+
+ARTICOLUL 9 - CLAUZA DE ACCELERARE
+
+9.1. În caz de neîndeplinire a oricărei obligații de plată, Vânzătorul poate declara imediat exigibilă întreaga sumă restantă, fără notificare prealabilă.
+
+
+ARTICOLUL 10 - FORȚA MAJORĂ
+
+10.1. Forța majoră exonerează părțile de răspundere. Partea care invocă forța majoră trebuie să notifice cealaltă parte în scris în termen de 5 zile, cu dovezi în 10 zile.
+
+
+ARTICOLUL 11 - DISPOZIȚII FINALE
+
+11.1. Orice modificare a contractului se face prin act adițional semnat de ambele părți.
+
+11.2. Vânzătorul are dreptul de a inspecta echipamentul la locația Cumpărătorului, cu preaviz rezonabil, până la transferul de proprietate.
+
+11.3. Notificările se trimit la adresele menționate în preambul și se consideră primite:
+- Pentru poștă: la data confirmării de primire
+- Pentru email: în prima zi lucrătoare după expediere
+
+11.4. Litigiile se soluționează pe cale amiabilă sau, în caz contrar, de instanțele din municipiul București.
+
+11.5. Cumpărătorul și Fidejusorul declară că nu sunt în procedură de insolvență/reorganizare și se obligă să notifice Vânzătorul în 5 zile în caz de inițiere a oricărei astfel de proceduri.
+
+11.6. Prezentul contract a fost negociat și acceptat în mod expres de toate părțile, reprezentând voința lor reală.
+
+
+Încheiat astăzi, ${dataFormatted}, în 3 exemplare originale.
+
+
+VÂNZĂTOR                          CUMPĂRĂTOR                          FIDEJUSOR
+ARDA MANUFACTURING SRL
+
+_____________________          _____________________          _____________________
+Ionuț Dinu                         ${data.nume_cumparator}                 ${data.nume_fidejusor}
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NOTĂ: Anexa 1 (Specificații echipament și accesorii) face parte integrantă 
+din prezentul contract și este atașată ca document separat.
+
+═══════════════════════════════════════════════════════════════════════════════`;
+        }
+
+        function generatePVText(data) {
+            return `PROCES VERBAL DE RECEPȚIE
+
+Nr. ${data.numar_contract} / ${formatDate(new Date(data.data_contract))}
+
+Referitor la: Contract de vânzare cu plată în rate nr. ${data.numar_contract} / ${formatDate(new Date(data.data_contract))}
+
+
+PĂRȚILE:
+
+FURNIZOR:
+ARDA MANUFACTURING SRL
+CUI: 33309968, J40/7470/2014
+Sediu: București, Str. Poet Panait Cernea nr. 1, BL M52, sc. 2, et. 4, ap. 47
+Punct de lucru: Str. Foisorului nr. 107, sector 3, București
+Reprezentant: Ionuț Dinu
+
+BENEFICIAR:
+${data.nume_cumparator.toUpperCase()}
+CUI: ${data.cui_cumparator}
+Nr. Registrul Comerțului: ${data.rc_cumparator}
+CNP: ${data.cnp_cumparator}
+Adresă livrare: ${data.adresa_cumparator}
+Reprezentant: ${data.nume_cumparator}
+
+
+OBIECTUL RECEPȚIEI:
+
+Echipament: ${data.nume_echipament}
+Serie: ${data.serie_echipament || '_________________________________'}
+Valoare: ${parseFloat(data.pret_total).toLocaleString('ro-RO')} LEI
+
+
+VERIFICĂRI EFECTUATE:
+
+□ Echipamentul a fost livrat complet conform Anexei 1 la contract
+□ Toate accesoriile sunt prezente și în stare bună
+□ Echipamentul este funcțional
+□ Nu prezintă defecte vizibile sau deteriorări
+□ Ambalajul este intact
+□ Documentația tehnică este completă (manual + certificat garanție)
+□ Echipamentul a fost testat în prezența beneficiarului
+
+
+CONCLUZII:
+
+Echipamentul și accesoriile au fost recepționate în stare bună de funcționare, 
+conform specificațiilor din contract și Anexa 1.
+
+Beneficiarul confirmă primirea echipamentului complet și funcțional.
+
+
+Data recepției: _________________________________
+Locul recepției: ${data.adresa_cumparator}
+
+
+FURNIZOR                                    BENEFICIAR
+ARDA MANUFACTURING SRL
+
+_____________________                       _____________________
+Ionuț Dinu                                  ${data.nume_cumparator}
+
+
+Ștampilă                                    Ștampilă`;
+        }
+
+        function generateGarantieText(data) {
+            return `CERTIFICAT DE GARANȚIE
+
+Nr. ${data.numar_contract} / ${formatDate(new Date(data.data_contract))}
+
+
+FURNIZOR / IMPORTATOR:
+ARDA MANUFACTURING SRL
+CUI: 33309968, J40/7470/2014
+Adresă: București, Str. Foisorului nr. 107, sector 3
+Telefon: 0774699211
+Email: contact@primeestetic.ro
+
+
+BENEFICIAR:
+Nume: ${data.nume_cumparator.toUpperCase()}
+CUI: ${data.cui_cumparator}, Nr. RC: ${data.rc_cumparator}
+Adresă: ${data.adresa_cumparator}
+Telefon: _________________________________
+Email: _________________________________
+
+
+ECHIPAMENT GARANTAT:
+
+Denumire: ${data.nume_echipament}
+Serie: ${data.serie_echipament || '_________________________________'}
+Data achiziției: ${formatDate(new Date(data.data_contract))}
+Data punerii în funcțiune: _________________________________
+
+
+CONDIȚII DE GARANȚIE:
+
+Perioada de garanție: ${data.perioada_garantie} LUNI de la data punerii în funcțiune
+
+Data expirării garanției: _________________________________
+
+
+CE ACOPERĂ GARANȚIA:
+
+✓ Defecte de fabricație
+✓ Vicii ascunse ale echipamentului
+✓ Reparații efectuate de personal autorizat ARDA MANUFACTURING
+✓ Piese de schimb originale (dacă este cazul)
+
+
+CE NU ACOPERĂ GARANȚIA:
+
+✗ Deteriorări cauzate de manipulare necorespunzătoare
+✗ Defecte cauzate de montare sau utilizare neconformă cu manualul
+✗ Deteriorări prin accident, neglijență sau nerespectarea instrucțiunilor
+✗ Accesorii, consumabile sau piese casabile
+✗ Defecțiuni cauzate de variații de tensiune electrică
+✗ Utilizarea de consumabile neoriginale
+✗ Deteriorarea sau distrugerea sigiliilor aparatului
+✗ Reparații efectuate de personal neautorizat
+✗ Intervenții tehnice efectuate fără acordul ARDA MANUFACTURING
+
+
+Contact pentru service:
+Telefon: 0774699211
+Email: contact@primeestetic.ro
+Program: Luni - Vineri, 09:00 - 17:00
+
+
+EMIS DE:
+ARDA MANUFACTURING SRL
+
+Data emiterii: ${formatDate(new Date(data.data_contract))}
+
+_____________________
+Ionuț Dinu
+Administrator
+
+
+Ștampilă firmă`;
+        }
+
+        function generateAnexaText(data) {
+            let accesoriiText = '';
+            data.accesorii.forEach((acc, index) => {
+                accesoriiText += `│  ${(index + 1).toString().padEnd(3)}│ ${acc.nume.padEnd(32)} │  ${acc.cantitate.toString().padEnd(18)}│\n`;
+            });
+
+            return `ANEXA 1 - SPECIFICAȚII ECHIPAMENT ȘI ACCESORII
+
+════════════════════════════════════════════════════════════════════════
+
+ECHIPAMENT PRINCIPAL:
+
+Denumire: ${data.nume_echipament}
+Serie: ${data.serie_echipament || '_________________________________'}
+
+
+ACCESORII ȘI COMPONENTE INCLUSE:
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  Nr. │  Denumire accesoriu              │  Cantitate             │
+├─────────────────────────────────────────────────────────────────────┤
+${accesoriiText}└─────────────────────────────────────────────────────────────────────┘
+
+
+DOCUMENTAȚIE INCLUSĂ:
+
+□ Manual de utilizare
+□ Certificat de garanție
+
+
+PREȚUL TOTAL: ${parseFloat(data.pret_total).toLocaleString('ro-RO')} LEI
+
+
+NOTĂ: 
+Toate componentele și accesoriile enumerate mai sus fac parte integrantă din contract și sunt supuse acelorași condiții ca echipamentul principal.
+
+
+Data recepției: __________
+
+Semnătura Cumpărător: _____________________`;
+        }
+
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert alert-${type} show`;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        function downloadContract() {
+            const blob = new Blob([generatedDocument], { type: 'text/plain;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentFilename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        function generateAll() {
+            const data = getFormData();
+            
+            if (!data.numar_contract || !data.data_contract || !data.nume_cumparator) {
+                showAlert('Completează toate câmpurile obligatorii!', 'warning');
+                return;
+            }
+
+            // Generează toate documentele
+            const templates = ['contract', 'pv', 'garantie', 'anexa'];
+            
+            templates.forEach(template => {
+                currentTemplate = template;
+                generateContract();
+                downloadContract();
+            });
+
+            showAlert('Toate documentele au fost generate și descărcate!', 'success');
+        }
+
+        function resetForm() {
+            document.getElementById('contractForm').reset();
+            document.getElementById('previewBox').classList.remove('show');
+            document.getElementById('accesoriiList').innerHTML = '';
+            addAccesoriu();
+            calculeazaRate();
+            document.getElementById('data_contract').valueAsDate = new Date();
+        }
+
+        // Inițializare
+        addAccesoriu();
+    </script>
+</body>
+</html>
+`;
