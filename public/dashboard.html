@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard CRM</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+        h1 { margin-bottom: 20px; }
+        .box {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            background: #fff;
+        }
+        th {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Dashboard CRM – Arda Manufacturing</h1>
+
+<div class="box">
+    <h2>📌 Clienți salvați</h2>
+    <table id="clientsTable">
+        <tr><th>ID</th><th>Nume</th><th>CNP</th><th>Telefon</th></tr>
+    </table>
+</div>
+
+<div class="box">
+    <h2>📄 Contracte salvate</h2>
+    <table id="contractsTable">
+        <tr><th>ID</th><th>Număr Contract</th><th>Cumpărător</th><th>Fișier</th></tr>
+    </table>
+</div>
+
+<div class="box">
+    <h2>💰 Rate generate</h2>
+    <table id="ratesTable">
+        <tr><th>#</th><th>Valoare</th><th>Scadență</th><th>Status</th></tr>
+    </table>
+</div>
+
+<script src="../js/storage.js"></script>
+
+<script>
+function loadDashboard() {
+    // ==============================
+    // Clienți
+    // ==============================
+    const clients = JSON.parse(localStorage.getItem("arda_clients") || "[]");
+    const clientsTable = document.getElementById("clientsTable");
+
+    clients.forEach(c => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${c.id}</td>
+            <td>${c.nume}</td>
+            <td>${c.cnp}</td>
+            <td>${c.telefon}</td>
+        `;
+        clientsTable.appendChild(row);
+    });
+
+    // ==============================
+    // Contracte
+    // ==============================
+    const contracts = JSON.parse(localStorage.getItem("arda_contracts") || "[]");
+    const contractsTable = document.getElementById("contractsTable");
+
+    contracts.forEach(c => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${c.id}</td>
+            <td>${c.numar_contract}</td>
+            <td>${c.nume_cumparator}</td>
+            <td>${c.filename}</td>
+        `;
+        contractsTable.appendChild(row);
+    });
+
+    // ==============================
+    // Rate
+    // ==============================
+    const rates = JSON.parse(localStorage.getItem("arda_rates") || "[]");
+    const ratesTable = document.getElementById("ratesTable");
+
+    rates.forEach(r => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${r.nr}</td>
+            <td>${r.valoarea}</td>
+            <td>${r.scadenta}</td>
+            <td>${r.status}</td>
+        `;
+        ratesTable.appendChild(row);
+    });
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>
 
