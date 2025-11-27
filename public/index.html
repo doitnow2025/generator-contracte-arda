@@ -1178,7 +1178,99 @@ Semnătura Cumpărător: _____________________`;
 
         // Inițializare
         addAccesoriu();
-    </script>
+   /* =========================================================
+   SALVARE DATE ÎN MINI-CRM (storage.js)
+   ========================================================= */
+
+function saveClientToCRM(data) {
+    const client = {
+        id: Date.now(),
+        nume: data.nume_cumparator,
+        cui: data.cui_cumparator,
+        rc: data.rc_cumparator,
+        cnp: data.cnp_cumparator,
+        adresa: data.adresa_cumparator,
+        telefon: data.telefon || "",
+        email: data.email || "",
+        createdAt: new Date().toISOString()
+    };
+
+    Storage.saveClient(client);
+    return client.id;
+}
+
+function saveContractToCRM(data, contractText, filename) {
+    const contract = {
+        id: Date.now(),
+        numar_contract: data.numar_contract,
+        cumparator: data.nume_cumparator,
+        denumire_echipament: data.nume_echipament,
+        valoare_totala: data.pret_total,
+        avans: data.avans,
+        nr_rate: data.nr_rate,
+        rata_lunara: Math.round((data.pret_total - data.avans) / data.nr_rate),
+        data_contract: data.data_contract,
+        scadenta: data.zi_scadenta,
+        fisier_nume: filename,
+        fisier_continut: contractText,
+        createdAt: new Date().toISOString()
+    };
+
+    Storage.saveContract(contract);
+    return contract.id;
+}
+
+function saveRatesToCRM(data) {
+    const pret = parseFloat(data.pret_total);
+    const avans = parseFloat(data.avans);
+    const nrRate = parseInt(data.nr_rate);
+    const valoareRata = Math.round((pret - avans) / nrRate);
+
+    const startDate = new Date(data.data_contract);
+    const rate = [];
+
+    for (let i = 1; i <= nrRate; i++) {
+        let d = new Date(startDate);
+        d.setMonth(startDate.getMonth() + i);
+        d.setDate(data.zi_scadenta);
+
+        rate.push({
+            id: Date.now() + i,
+            nr: i,
+            numar_contract: data.numar_contract,
+            cumparator: data.nume_cumparator,
+            valoare: valoareRata,
+            scadenta: d.toISOString(),
+            status: "neachitata"
+        });
+    }
+
+    rate.forEach(r => Storage.saveRate(r));
+}
+
+/* =========================================================
+   SUPRASCRIU generateContract() — adaug salvări CRM
+   ========================================================= */
+
+const originalGenerateContract = generateContract;
+
+generateContract = function () {
+    originalGenerateContract();  // păstrăm funcția ta originală
+
+    const data = getFormData();
+
+    // salvează clientul
+    const clientId = saveClientToCRM(data);
+
+    // salvează contractul
+    saveContractToCRM(data, generatedDocument, currentFilename);
+
+    // salvează ratele
+    saveRatesToCRM(data);
+
+    console.log("🟩 Date salvate în CRM local!");
+}
+ </script>
 </body>
 </html>
 `;
